@@ -1,0 +1,2 @@
+# On every Monday at 1:00 am, run the script 'Project_1_Weekly Updates.sql' to update the new sales records into the data warehouse.
+0 1 * * 1 /usr/bin/mysql --host=localhost --user=root --password=password classicModels < /home/username/Project_1_Weekly Updates.sql
