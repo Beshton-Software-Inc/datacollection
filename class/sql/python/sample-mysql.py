@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # Define the MySQL engine using MySQL Connector/Python
 engine = sqlalchemy.create_engine(
-    'mysql+mysqlconnector://root:password@localhost:3306/classicmodels',
+    'mysql://root:password@localhost:3306/classicmodels',
     echo=True)
 
  
@@ -32,7 +32,7 @@ session = Session()
 # Add a user
 jwk_user = User(name='jesper', fullname='Jesper Wisborg Krogh', nickname='ggg')
 session.add(jwk_user)
-# session.commit()
+session.commit()
  
 # Query the user
 our_user = session.query(User).filter_by(name='jesper').first()

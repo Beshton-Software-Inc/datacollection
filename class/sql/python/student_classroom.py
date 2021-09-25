@@ -1,5 +1,5 @@
 import csv
-
+import sys
 class Room:
     studentList = dict()
 
@@ -18,6 +18,11 @@ class Room:
                 print("room number is", self.studentList[name])
             else: print("not found student name, please try again")
 
-r = Room()
-
-print(r.roomFinder())
+def main(args):
+    r = Room() 
+    print(r.roomFinder())
+    
+    
+if __name__ == '__main__':
+    main(sys.argv[1:])
+   

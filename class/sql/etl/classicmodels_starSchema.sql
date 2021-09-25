@@ -23,11 +23,19 @@ DROP TABLE IF EXISTS `classicmodel_fact`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `classicmodel_fact` (
-  `productCode` varchar(15) CHARACTER SET latin1 NOT NULL,
+  `productCode` varchar(15) CHARACTER SET latin1 NOT NULL, --dimension
   `orderNumber` int NOT NULL,
   `customerNumber` int NOT NULL,
   `checkNumber` varchar(50) CHARACTER SET latin1 NOT NULL,
   `employeeNumber` int NOT NULL
+  
+  `orderqty`
+  `unitprice`
+  `totalvalue`
+  `paymentamount`
+  
+
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
