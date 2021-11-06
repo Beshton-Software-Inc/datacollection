@@ -2,6 +2,3 @@ pymongo
 sqlalchemy
 pandas
 numpy
-reqeusts
-boto3
-botocore
