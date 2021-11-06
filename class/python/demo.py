@@ -3,9 +3,12 @@ import sys
 def fibinaci(n):
     "1, 1, 2, 3, 5, 8, ...... "
     a = 1
-    b = 1
+    c = "dave"
+    d = "annie"
     while b < n:
         a, b = b, a+b
+        # a = b
+        # b = a + b
         print (a)
         
 
