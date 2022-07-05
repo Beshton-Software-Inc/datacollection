@@ -15,7 +15,7 @@ CREATE TABLE `Employee` (
   `login` int(11) NOT NULL,
   `last access` date NOT NULL,
   `last modified date` date NOT NULL,
-  `by` varchar(50) NOT NULL,
+  `by` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `Employee` */
@@ -52,4 +52,4 @@ insert  into `Employee`(`login`,`last access`,`last modified date`,`by`) values
 
 (014, '2003-06-06', '2004-12-17', 'Freddie Mercury'),
 
-(015, '2003-06-06', '2004-12-17', 'Kyusun Choi'),
+(015, '2003-06-06', '2004-12-17', 'Kyusun Choi');
