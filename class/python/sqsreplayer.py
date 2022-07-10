@@ -1,4 +1,4 @@
-from jsonlogging import *
+# from jsonlogging import *
 import ast  
 import logging
 import time 
@@ -12,24 +12,18 @@ import requests
 import base64 
 from datetime import datetime
 import threading
-import queue
-from eventlog import CustomJsonFormatter
-from measure import measure 
+import queue  
 
-output_handler = logging.StreamHandler(sys.stdout)
-formatter = CustomJsonFormatter('(time) (severity) (message) (filename) (lineno)')
-output_handler.setFormatter(formatter)
 LOG = logging.getLogger()
-LOG.addHandler(output_handler)
 LOG.setLevel(logging.INFO)
 LOG.propagate = False 
 
-SQS_QUEUE_URL_PREFIX = os.getenv("SQS_QUEUE_URL_PREFIX","https://sqs.us-west-1.amazonaws.com/700188841304/")
-SQS_QUEUE_NAME = os.getenv("SQS_QUEUE_NAME","coldword-cstage-test1")
+SQS_QUEUE_URL_PREFIX = os.getenv("SQS_QUEUE_URL_PREFIX","https://sqs.us-east-2.amazonaws.com/837709276619/")
+SQS_QUEUE_NAME = os.getenv("SQS_QUEUE_NAME","Customers")
 SQS_QUEUE_URL = "%s%s"%(SQS_QUEUE_URL_PREFIX,SQS_QUEUE_NAME)
-FROM_QUEUE_NAME = os.getenv("FROM_QUEUE_NAME", "coldword-cstage-uswest2-0-dead-letter")
+FROM_QUEUE_NAME = os.getenv("FROM_QUEUE_NAME", "demo-sqs")
 FROM_SQS_QUEUE_URL = "%s%s"%(SQS_QUEUE_URL_PREFIX,FROM_QUEUE_NAME)
-REGION = os.getenv("REGION", "us-west-1") 
+REGION = os.getenv("REGION", "us-east-2") 
 aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID')
 aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
    
@@ -38,6 +32,7 @@ class SQSReplayer(threading.Thread):
     def __init__(self, name, queue=None): 
         super().__init__(group=None, name=name)
         self.__name__ = name
+        self.__last_receive__ = datetime.now()
         self.__sqs__ = boto3.client(
             'sqs',
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
@@ -69,7 +64,11 @@ class SQSReplayer(threading.Thread):
             message = response['Messages'][0]
             body = message["Body"]
             LOG.info({"message":"message received %s" % body})
+            current =  datetime.now()
+            if (current - self.__last_receive__).seconds  > 3600:   
+                LOG.error({"message": "no message received for 1 hour. alert"})
             receipt_handle = message['ReceiptHandle']
+            self.__last_receive__ = current
             success = self.post_message(body)
             if success:
                 # Delete received message from queue
@@ -81,8 +80,14 @@ class SQSReplayer(threading.Thread):
                 LOG.info({"message":'Received and deleted message'} )
                 
         except Exception as ex:
-            LOG.info({"message": "no message recevied "})
-             
+            if ex.__class__.__name__ == "ClientError":   
+                LOG.error({"message": "check security credentials"})
+            elif ex.__class__.__name__ == "KeyError":   
+                LOG.info({"message":"no message available"})
+                current =  datetime.now()
+                if (current - self.__last_receive__).seconds  > 3600:   
+                    LOG.error({"message": "no message received for 1 hour. alert"})
+                
     
     # @measure
     def post_message(self, body):  
@@ -106,13 +111,13 @@ class SQSReplayer(threading.Thread):
     
     
 def main(args):
-    if len(args) == 2:
-        sys.stderr.write(
-            'Usage: example.py <aggressiveness> <path to wav file>\n')
-        # sys.exit(1)
-        meetingId = args[1]
-    else:
-        meetingId = "oau"
+    # if len(args) == 2:
+    #     sys.stderr.write(
+    #         'Usage: example.py <aggressiveness> <path to wav file>\n')
+    #     # sys.exit(1)
+    #     meetingId = args[1]
+    # else:
+    #     meetingId = "oau"
     
     replayer = SQSReplayer(queue.Queue())
     

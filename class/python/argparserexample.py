@@ -38,4 +38,4 @@ if __name__ == "__main__":
                 if args.filter is None or args.filter in full_filename:
                     files.append(full_filename)
                     
-    print (args.folder)
+    print (args.folder, args.num_processes)

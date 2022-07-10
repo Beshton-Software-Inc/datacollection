@@ -1,6 +1,7 @@
 
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
+import MySQLdb
 
 # Define the MySQL engine using MySQL Connector/Python
 engine = sqlalchemy.create_engine(

@@ -32,6 +32,10 @@ OAUTH_CONFIG = {
     'scope': 'admin',
 }
 
+import requests
+url = 'https://api.github.com/repos/pandas-dev/pandas/issues'
+resp = requests.get(url)
+print(resp.headers)
 
 class wrapi:
     def __init__(self):
